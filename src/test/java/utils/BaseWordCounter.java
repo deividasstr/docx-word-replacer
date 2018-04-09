@@ -8,15 +8,18 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import java.io.*;
 import java.util.List;
 
-public class ReplacedChecker {
+public abstract class BaseWordCounter {
 
     private static int DEFAULT_POS = 0;
 
-    public static boolean fileContainsWordInText(@NotNull File file, @NotNull String word)
-            throws Exception {
+    private String word;
+    private int wordsFound = 0;
+
+    public int wordCountInFile(@NotNull File file, @NotNull String word) throws Exception {
         InputStream inputStream = new FileInputStream(file);
         XWPFDocument doc = new XWPFDocument(inputStream);
-        return docContainsWordInText(doc, word);
+        wordCountInDoc(doc, word);
+        return wordsFound;
     }
 
     /**
@@ -24,71 +27,67 @@ public class ReplacedChecker {
      * scattered in runs around it. It does not check separate paragraphs if text is scattered amongst them.
      * @param doc XWPFDocument
      * @param word to be searched
-     * @return boolean
-     * @throws NullPointerException
      */
-    public static boolean docContainsWordInText(@NotNull XWPFDocument doc, @NotNull String word) {
-        for (XWPFParagraph p : doc.getParagraphs()) {
-            if (paragraphNotNullAndHasRuns(p)) {
-                if (checkParagraph(word, p)) return true;
-            }
-        }
-        return false;
+    private void wordCountInDoc(@NotNull XWPFDocument doc, @NotNull String word) {
+        wordsFound = 0;
+        this.word = word;
+        countWords(doc);
     }
 
-    private static boolean checkParagraph(String word, XWPFParagraph p) {
+    abstract void countWords(@NotNull XWPFDocument doc);
+
+    void checkInParagraph(XWPFParagraph p) {
         List<XWPFRun> runs = p.getRuns();
         for (int runIndex = 0; runIndex < runs.size(); runIndex++) {
             XWPFRun run = p.getRuns().get(runIndex);
             if (isRunNotNullAndNotEmpty(run)) {
                 String text = run.getText(DEFAULT_POS);
                 if (text.contains(word)) {
-                    return true;
+                    wordsFound++;
                 } else if (isNotFirstRun(runIndex) && lastRunHasText(runs, runIndex)) {
                     if (lastAndCurrentRunsText(runs, runIndex, text).contains(word)) {
-                        return true;
+                        wordsFound++;
                     } else if (nextRunHasText(runs, runIndex) && lastThisNextRunText(runs, runIndex).contains(word)) {
-                        return true;
+                        wordsFound++;
                     }
                 }
             }
         }
-        return false;
     }
 
-    private static boolean paragraphNotNullAndHasRuns(XWPFParagraph p) {
+    boolean paragraphNotNullAndHasRuns(XWPFParagraph p) {
         return p != null && !p.getRuns().isEmpty();
     }
 
-    private static String lastThisNextRunText(List<XWPFRun> runs, int runIndex) {
+    private String lastThisNextRunText(List<XWPFRun> runs, int runIndex) {
         String text = runs.get(runIndex).getText(DEFAULT_POS);
         return lastAndCurrentRunsText(runs, runIndex, text) + nextRunsText(runs, runIndex);
     }
 
-    private static boolean nextRunHasText(List<XWPFRun> runs, int runIndex) {
+    private boolean nextRunHasText(List<XWPFRun> runs, int runIndex) {
         return runs.size() > runIndex + 1
                 && runs.get(runIndex + 1).getText(DEFAULT_POS) != null
                 && !runs.get(runIndex + 1).getText(DEFAULT_POS).isEmpty();
     }
 
-    private static String nextRunsText(List<XWPFRun> runs, int i) {
+    private String nextRunsText(List<XWPFRun> runs, int i) {
         return runs.get(i + 1).getText(DEFAULT_POS);
     }
 
-    private static String lastAndCurrentRunsText(List<XWPFRun> runs, int runIndex, String text) {
+    private String lastAndCurrentRunsText(List<XWPFRun> runs, int runIndex, String text) {
         return runs.get(runIndex - 1).getText(DEFAULT_POS) + text;
     }
 
-    private static boolean lastRunHasText(List<XWPFRun> runs, int runIndex) {
+    private boolean lastRunHasText(List<XWPFRun> runs, int runIndex) {
         return runs.get(runIndex - 1).getText(DEFAULT_POS) != null
                 && !runs.get(runIndex - 1).getText(DEFAULT_POS).isEmpty();
     }
 
-    private static boolean isNotFirstRun(int runIndex) {
+    private boolean isNotFirstRun(int runIndex) {
         return runIndex > 0;
     }
 
-    private static boolean isRunNotNullAndNotEmpty(XWPFRun run) {
+    private boolean isRunNotNullAndNotEmpty(XWPFRun run) {
         return run != null && run.getText(DEFAULT_POS) != null;
     }
 }
