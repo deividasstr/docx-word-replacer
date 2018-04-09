@@ -57,9 +57,14 @@ public class ReplacedCheckerTest {
     }
 
     @Test
-    public void fileContainsWordInText() throws Exception {
+    public void fileContainsWordInText_contains() throws Exception {
         assertTrue(ReplacedChecker.fileContainsWordInText(docxFile, TEST_DOC_TEST_CASE_1));
-        assertFalse(ReplacedChecker.fileContainsWordInText(docxFile, TEST_DOC_TEST_CASE_2)); // Scattered in different paragraphs
         assertTrue(ReplacedChecker.fileContainsWordInText(docxFile, TEST_DOC_TEST_CASE_3));
+    }
+
+    @Test
+    public void fileContainsWordInText_doesntContain() throws Exception {
+        assertFalse(ReplacedChecker.fileContainsWordInText(docxFile, TEST_DOC_TEST_CASE_2)); // Scattered in different paragraphs
+        assertFalse(ReplacedChecker.fileContainsWordInText(docxFile, "Uga-chaga"));
     }
 }
