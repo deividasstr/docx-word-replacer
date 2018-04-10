@@ -1,10 +1,12 @@
-class Replacer {
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-    public void replaceInText(String toReplace, String replacement) {
+public class Replacer {
+
+    public void replaceInText(XWPFDocument document, String toReplace, String replacement) {
 
     }
 
-    public void replaceInTable(String toReplace, String replacement) {
+    public void replaceInTable(XWPFDocument document, String toReplace, String replacement) {
 
     }
 }

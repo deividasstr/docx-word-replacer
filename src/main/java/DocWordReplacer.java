@@ -10,12 +10,25 @@ public class DocWordReplacer {
 
     public DocWordReplacer(@NotNull File docxFile) throws IOException {
         InputStream inputStream = new FileInputStream(docxFile);
-        document = new XWPFDocument(inputStream);
+        init(new XWPFDocument(inputStream));
     }
 
-    public DocWordReplacer(@NotNull XWPFDocument xWPFDoc) {
-        document = xWPFDoc;
+    public DocWordReplacer(@NotNull XWPFDocument xwpfDoc) {
+        init(xwpfDoc);
+    }
+
+    private void init(XWPFDocument xwpfDoc) {
+        if (xwpfDoc == null) throw new NullPointerException();
+        document = xwpfDoc;
         replacer = new Replacer();
+    }
+
+    public void replaceWordsInText(String toReplace, String replacement) {
+        replacer.replaceInText(document, toReplace, replacement);
+    }
+
+    public void replaceWordsInTables(String toReplace, String replacement) {
+        replacer.replaceInTable(document, toReplace, replacement);
     }
 
     public File getModdedFile() {
@@ -26,11 +39,5 @@ public class DocWordReplacer {
         return document;
     }
 
-    public void replaceWordsInText(String toReplace, String replacement) {
-        replacer.replaceInText(toReplace, replacement);
-    }
 
-    public void replaceWordsInTables(String toReplace, String replacement) {
-        replacer.replaceInTable(toReplace, replacement);
-    }
 }
