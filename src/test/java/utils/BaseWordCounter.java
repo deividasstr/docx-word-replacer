@@ -6,11 +6,12 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import java.io.*;
-import java.util.List;
+import java.util.*;
 
 public abstract class BaseWordCounter {
 
     private static int DEFAULT_POS = 0;
+    private static int DEFAULT_LAST_USED_RUN = -1;
 
     private String word;
     private int wordsFound = 0;
@@ -25,7 +26,8 @@ public abstract class BaseWordCounter {
     /**
      * Checks if XWPFDocument contains a given word. Checks runs of all paragraphs if searchable text is in one or
      * scattered in runs around it. It does not check separate paragraphs if text is scattered amongst them.
-     * @param doc XWPFDocument
+     *
+     * @param doc  XWPFDocument
      * @param word to be searched
      */
     private void wordCountInDoc(@NotNull XWPFDocument doc, @NotNull String word) {
@@ -38,13 +40,18 @@ public abstract class BaseWordCounter {
 
     void checkInParagraph(XWPFParagraph p) {
         List<XWPFRun> runs = p.getRuns();
+        int lastUsedRun = DEFAULT_LAST_USED_RUN;
         for (int runIndex = 0; runIndex < runs.size(); runIndex++) {
             XWPFRun run = p.getRuns().get(runIndex);
             if (isRunNotNullAndNotEmpty(run)) {
                 String text = run.getText(DEFAULT_POS);
+                //System.out.println(runIndex + " " + text);
                 if (text.contains(word)) {
                     wordsFound++;
-                } else if (isNotFirstRun(runIndex) && lastRunHasText(runs, runIndex)) {
+                    lastUsedRun = runIndex;
+                } else if (isNotFirstRun(runIndex)
+                        && previousRunHasText(runs, runIndex)
+                        && previousRunWasNotUsed(lastUsedRun, runIndex)) {
                     if (lastAndCurrentRunsText(runs, runIndex, text).contains(word)) {
                         wordsFound++;
                     } else if (nextRunHasText(runs, runIndex) && lastThisNextRunText(runs, runIndex).contains(word)) {
@@ -54,6 +61,11 @@ public abstract class BaseWordCounter {
             }
         }
     }
+
+    private boolean previousRunWasNotUsed(int lastUsedRun, int runIndex) {
+        return lastUsedRun != runIndex - 1;
+    }
+
 
     boolean paragraphNotNullAndHasRuns(XWPFParagraph p) {
         return p != null && !p.getRuns().isEmpty();
@@ -78,7 +90,7 @@ public abstract class BaseWordCounter {
         return runs.get(runIndex - 1).getText(DEFAULT_POS) + text;
     }
 
-    private boolean lastRunHasText(List<XWPFRun> runs, int runIndex) {
+    private boolean previousRunHasText(List<XWPFRun> runs, int runIndex) {
         return runs.get(runIndex - 1).getText(DEFAULT_POS) != null
                 && !runs.get(runIndex - 1).getText(DEFAULT_POS).isEmpty();
     }
