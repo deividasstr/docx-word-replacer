@@ -1,27 +1,16 @@
 package utils;
 
 import com.sun.istack.internal.NotNull;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.*;
 
-import java.io.*;
 import java.util.*;
 
-public abstract class BaseWordCounter {
+public abstract class WordFinder implements OnWordFoundCallback {
 
     private static int DEFAULT_POS = 0;
     private static int DEFAULT_LAST_USED_RUN = -1;
 
     private String word;
-    private int wordsFound = 0;
-
-    public int wordCountInFile(@NotNull File file, @NotNull String word) throws Exception {
-        InputStream inputStream = new FileInputStream(file);
-        XWPFDocument doc = new XWPFDocument(inputStream);
-        wordCountInDoc(doc, word);
-        return wordsFound;
-    }
 
     /**
      * Checks if XWPFDocument contains a given word. Checks runs of all paragraphs if searchable text is in one or
@@ -30,15 +19,46 @@ public abstract class BaseWordCounter {
      * @param doc  XWPFDocument
      * @param word to be searched
      */
-    private void wordCountInDoc(@NotNull XWPFDocument doc, @NotNull String word) {
-        wordsFound = 0;
+    public void findWordsInTable(@NotNull XWPFDocument doc, @NotNull String word) {
         this.word = word;
-        countWords(doc);
+        for (XWPFTable t : doc.getTables()) {
+            checkTable(t);
+        }
     }
 
-    abstract void countWords(@NotNull XWPFDocument doc);
+    public void findWordsInText(@NotNull XWPFDocument doc, @NotNull String word) {
+        this.word = word;
+        for (XWPFParagraph p : doc.getParagraphs()) {
+            if (paragraphNotNullAndHasRuns(p)) {
+                checkInParagraph(p);
+            }
+        }
+    }
 
-    void checkInParagraph(XWPFParagraph p) {
+    private void checkTable(XWPFTable t) {
+        if (t.getRows() == null) return;
+        for (XWPFTableRow r : t.getRows()) {
+            checkRow(r);
+        }
+    }
+
+    private void checkRow(XWPFTableRow r) {
+        if (r.getTableCells() == null) return;
+        for (XWPFTableCell cell : r.getTableCells()) {
+            checkCell(cell);
+        }
+    }
+
+    private void checkCell(XWPFTableCell cell) {
+        if (cell.getParagraphs() == null) return;
+        for (XWPFParagraph p : cell.getParagraphs()) {
+            if (paragraphNotNullAndHasRuns(p)) {
+                checkInParagraph(p);
+            }
+        }
+    }
+
+    private void checkInParagraph(XWPFParagraph p) {
         List<XWPFRun> runs = p.getRuns();
         int lastUsedRun = DEFAULT_LAST_USED_RUN;
         for (int runIndex = 0; runIndex < runs.size(); runIndex++) {
@@ -47,15 +67,15 @@ public abstract class BaseWordCounter {
                 String text = run.getText(DEFAULT_POS);
                 //System.out.println(runIndex + " " + text);
                 if (text.contains(word)) {
-                    wordsFound++;
+                    onWordFoundInRun();
                     lastUsedRun = runIndex;
                 } else if (isNotFirstRun(runIndex)
                         && previousRunHasText(runs, runIndex)
                         && previousRunWasNotUsed(lastUsedRun, runIndex)) {
                     if (lastAndCurrentRunsText(runs, runIndex, text).contains(word)) {
-                        wordsFound++;
+                        onWordFoundInPreviousAndCurrentRun();
                     } else if (nextRunHasText(runs, runIndex) && lastThisNextRunText(runs, runIndex).contains(word)) {
-                        wordsFound++;
+                        onWordFoundInPreviousCurrentNextRun();
                     }
                 }
             }
@@ -66,8 +86,7 @@ public abstract class BaseWordCounter {
         return lastUsedRun != runIndex - 1;
     }
 
-
-    boolean paragraphNotNullAndHasRuns(XWPFParagraph p) {
+    private boolean paragraphNotNullAndHasRuns(XWPFParagraph p) {
         return p != null && !p.getRuns().isEmpty();
     }
 

@@ -3,28 +3,28 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.*;
 
-public class DocWordReplacer {
+public class WordReplacer {
 
     private XWPFDocument document;
-    private Replacer replacer;
+    private TextReplacer replacer;
 
-    public DocWordReplacer(@NotNull File docxFile) throws IOException {
+    public WordReplacer(@NotNull File docxFile) throws IOException {
         InputStream inputStream = new FileInputStream(docxFile);
         init(new XWPFDocument(inputStream));
     }
 
-    public DocWordReplacer(@NotNull XWPFDocument xwpfDoc) {
+    public WordReplacer(@NotNull XWPFDocument xwpfDoc) {
         init(xwpfDoc);
     }
 
     private void init(XWPFDocument xwpfDoc) {
         if (xwpfDoc == null) throw new NullPointerException();
         document = xwpfDoc;
-        replacer = new Replacer();
+        replacer = new TextReplacer();
     }
 
     public void replaceWordsInText(String toReplace, String replacement) {
-        replacer.replaceInText(document, toReplace, replacement);
+       replacer.replaceInText(document, toReplace, replacement);
     }
 
     public void replaceWordsInTables(String toReplace, String replacement) {
