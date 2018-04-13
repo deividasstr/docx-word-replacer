@@ -19,7 +19,7 @@ public abstract class WordFinder implements OnWordFoundCallback {
      * @param doc  XWPFDocument
      * @param word to be searched
      */
-    public void findWordsInTable(@NotNull XWPFDocument doc, @NotNull String word) {
+    protected void findWordsInTable(@NotNull XWPFDocument doc, @NotNull String word) {
         this.word = word;
         for (XWPFTable t : doc.getTables()) {
             checkTable(t);
@@ -65,7 +65,7 @@ public abstract class WordFinder implements OnWordFoundCallback {
             XWPFRun run = p.getRuns().get(runIndex);
             if (isRunNotNullAndNotEmpty(run)) {
                 String text = run.getText(DEFAULT_POS);
-                //System.out.println(runIndex + " " + text);
+                System.out.println(runIndex + " " + text);
                 if (text.contains(word)) {
                     onWordFoundInRun(run);
                     lastUsedRun = runIndex;

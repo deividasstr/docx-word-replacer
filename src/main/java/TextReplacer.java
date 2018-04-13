@@ -6,6 +6,8 @@ import java.util.List;
 
 public class TextReplacer extends WordFinder {
 
+    private static int DEFAULT_TEXT_POS = 0;
+
     private String replacement;
     private String bookmark;
 
@@ -28,50 +30,53 @@ public class TextReplacer extends WordFinder {
 
     @Override
     public void onWordFoundInPreviousAndCurrentRun(List<XWPFRun> runs, int currentRun) {
-        replaceInPreviousRun(runs, currentRun);
+        replaceNotFullBookmarkInRun(runs.get(currentRun - 1));
         cleanRunTextStart(runs.get(currentRun));
     }
 
     @Override
     public void onWordFoundInPreviousCurrentNextRun(List<XWPFRun> runs, int currentRun) {
-        replaceInPreviousRun(runs, currentRun - 1);
+        replaceNotFullBookmarkInRun(runs.get(currentRun - 1));
         deleteTextFromRun(runs.get(currentRun));
         cleanRunTextStart(runs.get(currentRun + 1));
     }
 
     private void deleteTextFromRun(XWPFRun run) {
-        run.setText("", 0);
+        run.setText("", DEFAULT_TEXT_POS);
     }
 
     private void replaceWordInRun(XWPFRun run) {
-        String replacedText = run.getText(0).replace(bookmark, replacement);
-        run.setText(replacedText, 0);
+        String replacedText = run.getText(DEFAULT_TEXT_POS).replace(bookmark, replacement);
+        run.setText(replacedText, DEFAULT_TEXT_POS);
     }
 
-    private void replaceInPreviousRun(List<XWPFRun> runs, int currentRun) {
-        String previousRunText = runs.get(currentRun - 1).getText(0);
-        previousRunText = replaceBookmarkFromPrevious(previousRunText, bookmark);
-        runs.get(currentRun - 1).setText(previousRunText, 0);
+    private void replaceNotFullBookmarkInRun(XWPFRun run) {
+        String text = run.getText(DEFAULT_TEXT_POS);
+        String remainingBookmark = getRemainingBookmarkStart(text, bookmark);
+        text = text.replace(remainingBookmark, replacement);
+        run.setText(text, DEFAULT_TEXT_POS);
     }
 
     private void cleanRunTextStart(XWPFRun run) {
-        String currentRunText = removeRemainingBookmark(run.getText(0) , bookmark);
-        run.setText(currentRunText, 0);
+        String text = run.getText(DEFAULT_TEXT_POS);
+        String remainingBookmark = getRemainingBookmarkEnd(text, bookmark);
+        text = text.replace(remainingBookmark, "");
+        run.setText(text, DEFAULT_TEXT_POS);
     }
 
-    private String replaceBookmarkFromPrevious(String previousRunText, String bookmark) {
-        if (!previousRunText.contains(bookmark)) {
-            return replaceBookmarkFromPrevious(previousRunText, bookmark.substring(0, bookmark.length() - 2));
+    private String getRemainingBookmarkEnd(String text, String bookmark) {
+        if (!text.startsWith(bookmark)) {
+            return getRemainingBookmarkEnd(text, bookmark.substring(1, bookmark.length()));
         } else {
-            return previousRunText.replace(bookmark, replacement);
+            return bookmark;
         }
     }
 
-    private String removeRemainingBookmark(String text, String bookmark) {
-        if (!text.contains(bookmark)) {
-            return removeRemainingBookmark(text, bookmark.substring(1, bookmark.length() - 1));
+    private String getRemainingBookmarkStart(String text, String bookmark) {
+        if (!text.endsWith(bookmark)) {
+            return getRemainingBookmarkStart(text, bookmark.substring(0, bookmark.length() - 1));
         } else {
-            return text.replace(bookmark, "");
+            return bookmark;
         }
     }
 }

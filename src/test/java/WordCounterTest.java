@@ -11,20 +11,20 @@ import static org.junit.Assert.assertEquals;
 public class WordCounterTest {
 
     // Entries in the docx file
-    private final static String TEST_DOC_TEST_CASE_TEXT_1 = "test_case_text_1";
-    private final static String TEST_DOC_TEST_CASE_TEXT_2 = "test_case_text_2";
-    private final static String TEST_DOC_TEST_CASE_TEXT_3 = "test_case_text_3";
+    public final static String TEST_DOC_TEST_CASE_TEXT_1 = "test_case_text_1";
+    public final static String TEST_DOC_TEST_CASE_TEXT_2 = "test_case_text_2";
+    public final static String TEST_DOC_TEST_CASE_TEXT_3 = "test_case_text_3";
 
-    private final static String TEST_DOC_TEST_CASE_TABLE_1 = "test_case_table_1";
-    private final static String TEST_DOC_TEST_CASE_TABLE_2 = "test_case_table_2";
-    private final static String TEST_DOC_TEST_CASE_TABLE_3 = "test_case_table_3";
+    public final static String TEST_DOC_TEST_CASE_TABLE_1 = "test_case_table_1";
+    public final static String TEST_DOC_TEST_CASE_TABLE_2 = "test_case_table_2";
+    public final static String TEST_DOC_TEST_CASE_TABLE_3 = "test_case_table_3";
 
-    private final static String TEST_DOC_TEST_CASE = "test_case";
-    private final static String TEST_DOC_TEST_CASE_WORD = "word";
-    private final static String TEST_DOC_TEST_CASE_RANDOM_WORD = "Uga-chaga";
+    public final static String TEST_DOC_TEST_CASE = "test_case";
+    public final static String TEST_DOC_TEST_CASE_WORD = "word";
+    public final static String TEST_DOC_TEST_CASE_RANDOM_WORD = "Uga-chaga";
 
-    private final static String TEST_DOC_TEST_CASE_SAME_VALS_IN_SAME_RUN = "same_run_vals";
-    private final static String TEST_DOC_TEST_CASE_SAME_VALS_IN_ONE_PARA = "same_vals_one_para";
+    public final static String TEST_DOC_TEST_CASE_SAME_VALS_IN_SAME_RUN = "same_run_vals";
+    public final static String TEST_DOC_TEST_CASE_SAME_VALS_IN_ONE_PARA = "same_vals_one_para";
 
     private static XWPFDocument doc;
     private static WordCounter wordCounter;
@@ -70,6 +70,4 @@ public class WordCounterTest {
     public void wordCountInFile_shouldFind2ValsInSameParaDiffRuns() throws Exception {
         assertEquals(2, wordCounter.countWordsInText(doc, TEST_DOC_TEST_CASE_SAME_VALS_IN_ONE_PARA));
     }
-
-
 }
