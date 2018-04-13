@@ -4,7 +4,7 @@ import utils.WordFinder;
 
 import java.util.List;
 
-public class TextReplacer extends WordFinder {
+ class TextReplacer extends WordFinder {
 
     private static int DEFAULT_TEXT_POS = 0;
 
@@ -32,6 +32,7 @@ public class TextReplacer extends WordFinder {
     public void onWordFoundInPreviousAndCurrentRun(List<XWPFRun> runs, int currentRun) {
         replaceNotFullBookmarkInRun(runs.get(currentRun - 1));
         cleanRunTextStart(runs.get(currentRun));
+        System.out.println("ON onWordFoundInPreviousAndCurrentRun");
     }
 
     @Override

@@ -11,11 +11,10 @@ import static org.junit.Assert.assertEquals;
 
 public class TextReplacerTest {
 
-    private static final String REPLACED_WORD = "pogo";
-    private static final String REPLACED_WORD_2 = "stick";
+    public static final String REPLACED_WORD = "pogo";
+    public static final String REPLACED_WORD_2 = "stick";
 
-    private static final String TEXT_WITHOUT_BOOKMARK = "Something here";
-    private static final String TEXT_WITH_REMAINING_BOOKMARK = "se_text_1" + TEXT_WITHOUT_BOOKMARK  ;
+    public static final String TEXT_WITHOUT_BOOKMARK = "Something here";
 
     private static File docxFile;
     private static TextReplacer replacer;
@@ -95,8 +94,6 @@ public class TextReplacerTest {
         replacer.replaceInText(document, WordCounterTest.TEST_DOC_TEST_CASE_SAME_VALS_IN_ONE_PARA, REPLACED_WORD);
         replacer.replaceInTable(document, WordCounterTest.TEST_DOC_TEST_CASE_SAME_VALS_IN_ONE_PARA, REPLACED_WORD);
 
-        saveWord(document, "./src/test/resources/docxfilereplaced.docx");
-
         assertEquals(2, wordCounter.countWordsInText(document, REPLACED_WORD));
         assertEquals(2, wordCounter.countWordsInTable(document, REPLACED_WORD));
     }
@@ -121,23 +118,5 @@ public class TextReplacerTest {
                 WordCounterTest.TEST_DOC_TEST_CASE_TEXT_1);
 
         assertEquals("test_cas", remainingBookmark);
-    }
-
-    private void saveWord(XWPFDocument doc, String fileName) throws IOException {
-        File docToSave = new File(fileName);
-
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(docToSave, false);
-            doc.write(out);
-            doc.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                out.flush();
-                out.close();
-            }
-        }
     }
 }

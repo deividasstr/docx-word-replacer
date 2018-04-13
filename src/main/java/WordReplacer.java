@@ -7,8 +7,10 @@ public class WordReplacer {
 
     private XWPFDocument document;
     private TextReplacer replacer;
+    private File documentFile;
 
     public WordReplacer(@NotNull File docxFile) throws IOException {
+        documentFile = docxFile;
         InputStream inputStream = new FileInputStream(docxFile);
         init(new XWPFDocument(inputStream));
     }
@@ -31,13 +33,35 @@ public class WordReplacer {
         replacer.replaceInTable(document, toReplace, replacement);
     }
 
-    public File getModdedFile() {
-        return null;
+    public File saveAndGetModdedFile(String path) throws IOException {
+        File file = new File(path);
+        return saveToFile(file);
+    }
+
+    public File saveAndGetModdedFile(File file) throws IOException {
+        return saveToFile(file);
     }
 
     public XWPFDocument getModdedXWPFDoc() {
         return document;
     }
 
-
+    private File saveToFile(File file) throws IOException {
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(file, false);
+            document.write(out);
+            document.close();
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            if (out != null) {
+                out.flush();
+                out.close();
+            }
+        }
+    }
+    //saveToFile(document, "./src/test/resources/docxfilereplaced.docx");
 }
