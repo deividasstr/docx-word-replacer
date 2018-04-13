@@ -29,13 +29,6 @@ import java.util.List;
     }
 
     @Override
-    public void onWordFoundInPreviousAndCurrentRun(List<XWPFRun> runs, int currentRun) {
-        replaceNotFullBookmarkInRun(runs.get(currentRun - 1));
-        cleanRunTextStart(runs.get(currentRun));
-        //System.out.println("ON onWordFoundInPreviousAndCurrentRun");
-    }
-
-    @Override
     public void onWordFoundInPreviousCurrentNextRun(List<XWPFRun> runs, int currentRun) {
         replaceNotFullBookmarkInRun(runs.get(currentRun - 1));
         deleteTextFromRun(runs.get(currentRun));

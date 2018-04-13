@@ -31,12 +31,12 @@ public class WordReplacer {
         replacer.replaceInTable(document, toReplace, replacement);
     }
 
-    public File saveAndGetModdedFile(String path) throws IOException {
+    public File saveAndGetModdedFile(String path) throws Exception {
         File file = new File(path);
         return saveToFile(file);
     }
 
-    public File saveAndGetModdedFile(File file) throws IOException {
+    public File saveAndGetModdedFile(File file) throws Exception {
         return saveToFile(file);
     }
 
@@ -44,7 +44,7 @@ public class WordReplacer {
         return document;
     }
 
-    private File saveToFile(File file) throws IOException {
+    private File saveToFile(File file) throws Exception{
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(file, false);

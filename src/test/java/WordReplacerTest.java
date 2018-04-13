@@ -5,10 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import utils.WordCounter;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -83,7 +80,7 @@ public class WordReplacerTest {
     }
 
     @Test
-    public void testReplaceWordsInTable_And_SaveToFile_And_getModdedFile() throws IOException {
+    public void testReplaceWordsInTable_And_SaveToFile_And_getModdedFile() throws Exception {
         wordReplacer.replaceWordsInTables(WordCounterTest.TEST_DOC_TEST_CASE, TextReplacerTest.REPLACED_WORD_2);
 
         File modFile = wordReplacer.saveAndGetModdedFile("./src/test/resources/docxfilereplaced.docx");
@@ -93,7 +90,7 @@ public class WordReplacerTest {
     }
 
     @Test
-    public void testFromXWPFDoc_ReplaceWordsInText_And_SaveToFileFromPath_And_getModdedFile() throws IOException {
+    public void testFromXWPFDoc_ReplaceWordsInText_And_SaveToFileFromPath_And_getModdedFile() throws Exception {
         XWPFDocument doc = fromFile(docxFile);
         WordReplacer replacer = new WordReplacer(doc);
 
@@ -101,6 +98,16 @@ public class WordReplacerTest {
 
         XWPFDocument modDoc = fromFile(replacer.saveAndGetModdedFile(replacedFile));
         assertEquals(5, wordCounter.countWordsInText(modDoc, TextReplacerTest.REPLACED_WORD_2));
+    }
+
+    @Test
+    public void saveToFile_throwsNPE() {
+        try {
+            XWPFDocument modDoc = fromFile(wordReplacer.saveAndGetModdedFile((File)null));
+            fail("Should have thrown NPE");
+        } catch (Exception e) {
+            assertTrue("Should have thrown NPE", e instanceof NullPointerException);
+        }
     }
 
     private XWPFDocument fromFile(File file) throws IOException {

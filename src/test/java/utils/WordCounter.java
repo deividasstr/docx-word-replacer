@@ -15,11 +15,6 @@ public class WordCounter extends WordFinder {
     }
 
     @Override
-    public void onWordFoundInPreviousAndCurrentRun(List<XWPFRun> runs, int currentRun) {
-        foundWords++;
-    }
-
-    @Override
     public void onWordFoundInPreviousCurrentNextRun(List<XWPFRun> runs, int currentRun) {
         foundWords++;
     }

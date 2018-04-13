@@ -65,21 +65,23 @@ public abstract class WordFinder implements OnWordFoundCallback {
             XWPFRun run = p.getRuns().get(runIndex);
             if (isRunNotNullAndNotEmpty(run)) {
                 String text = run.getText(DEFAULT_POS);
-                System.out.println(runIndex + " " + text);
+                //System.out.println(runIndex + " " + text);  Uncomment for printing the runs
                 if (text.contains(word)) {
                     onWordFoundInRun(run);
                     lastUsedRun = runIndex;
-                } else if (isNotFirstRun(runIndex)
-                        && previousRunHasText(runs, runIndex)
-                        && previousRunWasNotUsed(lastUsedRun, runIndex)) {
-                    if (lastAndCurrentRunsText(runs, runIndex, text).contains(word)) {
-                        onWordFoundInPreviousAndCurrentRun(runs, runIndex);
-                    } else if (nextRunHasText(runs, runIndex) && lastThisNextRunText(runs, runIndex).contains(word)) {
-                        onWordFoundInPreviousCurrentNextRun(runs, runIndex);
-                    }
+                } else if (isWordInPreviousCurrentNextRuns(runs, lastUsedRun, runIndex)) {
+                    onWordFoundInPreviousCurrentNextRun(runs, runIndex);
                 }
             }
         }
+    }
+
+    private boolean isWordInPreviousCurrentNextRuns(List<XWPFRun> runs, int lastUsedRun, int runIndex) {
+        return isNotFirstRun(runIndex)
+                && previousRunHasText(runs, runIndex)
+                && previousRunWasNotUsed(lastUsedRun, runIndex)
+                && nextRunHasText(runs, runIndex)
+                && lastThisNextRunText(runs, runIndex).contains(word);
     }
 
     private boolean previousRunWasNotUsed(int lastUsedRun, int runIndex) {
