@@ -1,13 +1,10 @@
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import utils.WordCounter;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -33,7 +30,7 @@ public class WordCounterTest {
     private static WordCounter wordCounter;
 
     @BeforeClass
-    public static void setup() throws Exception{
+    public static void setup() throws Exception {
         InputStream inputStream = new FileInputStream(new File("./src/test/resources/docxfile.docx"));
         doc = new XWPFDocument(inputStream);
         wordCounter = new WordCounter();
@@ -55,7 +52,7 @@ public class WordCounterTest {
     }
 
     @Test
-    public void wordCountInFile_shouldNoVals() throws Exception {
+    public void wordCountInFile_shouldFindNoVals() throws Exception {
         assertEquals(0, wordCounter.countWordsInTable(doc, TEST_DOC_TEST_CASE_TEXT_2)); // Scattered in different paragraphs
         assertEquals(0, wordCounter.countWordsInTable(doc, TEST_DOC_TEST_CASE_RANDOM_WORD));
 
@@ -73,7 +70,6 @@ public class WordCounterTest {
     public void wordCountInFile_shouldFind2ValsInSameParaDiffRuns() throws Exception {
         assertEquals(2, wordCounter.countWordsInText(doc, TEST_DOC_TEST_CASE_SAME_VALS_IN_ONE_PARA));
     }
-
 
 
 }

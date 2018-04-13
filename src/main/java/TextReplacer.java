@@ -15,8 +15,10 @@ public class TextReplacer extends WordFinder {
         findWordsInText(document, bookmark);
     }
 
-    public void replaceInTable(XWPFDocument document, String toReplace, String replacement) {
-
+    public void replaceInTable(XWPFDocument document, String bookmark, String replacement) {
+        this.replacement = replacement;
+        this.bookmark = bookmark;
+        findWordsInTable(document, bookmark);
     }
 
     @Override
