@@ -84,12 +84,12 @@ public class WordReplacerTest {
 
     @Test
     public void testReplaceWordsInTable_And_SaveToFile_And_getModdedFile() throws IOException {
-        wordReplacer.replaceWordsInTables(WordCounterTest.TEST_DOC_TEST_CASE_TABLE_1, TextReplacerTest.REPLACED_WORD_2);
+        wordReplacer.replaceWordsInTables(WordCounterTest.TEST_DOC_TEST_CASE, TextReplacerTest.REPLACED_WORD_2);
 
         File modFile = wordReplacer.saveAndGetModdedFile("./src/test/resources/docxfilereplaced.docx");
 
         XWPFDocument modDoc = fromFile(modFile);
-        assertEquals(1, wordCounter.countWordsInTable(modDoc, TextReplacerTest.REPLACED_WORD_2));
+        assertEquals(4, wordCounter.countWordsInTable(modDoc, TextReplacerTest.REPLACED_WORD_2));
     }
 
     @Test
@@ -97,10 +97,10 @@ public class WordReplacerTest {
         XWPFDocument doc = fromFile(docxFile);
         WordReplacer replacer = new WordReplacer(doc);
 
-        replacer.replaceWordsInText(WordCounterTest.TEST_DOC_TEST_CASE, TextReplacerTest.REPLACED_WORD_2);
+        replacer.replaceWordsInText("test", TextReplacerTest.REPLACED_WORD_2);
 
         XWPFDocument modDoc = fromFile(replacer.saveAndGetModdedFile(replacedFile));
-        assertEquals(4, wordCounter.countWordsInText(modDoc, TextReplacerTest.REPLACED_WORD_2));
+        assertEquals(5, wordCounter.countWordsInText(modDoc, TextReplacerTest.REPLACED_WORD_2));
     }
 
     private XWPFDocument fromFile(File file) throws IOException {

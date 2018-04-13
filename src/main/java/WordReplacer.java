@@ -7,10 +7,8 @@ public class WordReplacer {
 
     private XWPFDocument document;
     private TextReplacer replacer;
-    private File documentFile;
 
     public WordReplacer(@NotNull File docxFile) throws IOException {
-        documentFile = docxFile;
         InputStream inputStream = new FileInputStream(docxFile);
         init(new XWPFDocument(inputStream));
     }
@@ -63,5 +61,4 @@ public class WordReplacer {
             }
         }
     }
-    //saveToFile(document, "./src/test/resources/docxfilereplaced.docx");
 }
