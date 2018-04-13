@@ -10,24 +10,31 @@ public abstract class WordFinder implements OnWordFoundCallback {
     private static int DEFAULT_POS = 0;
     private static int DEFAULT_LAST_USED_RUN = -1;
 
-    private String word;
+    private String bookmark;
 
     /**
-     * Checks if XWPFDocument contains a given word. Checks runs of all paragraphs if searchable text is in one or
+     * Checks if XWPFDocument tables contain a given bookmark. Checks runs of all paragraphs if searchable text is in one or
      * scattered in runs around it. It does not check separate paragraphs if text is scattered amongst them.
      *
      * @param doc  XWPFDocument
      * @param word to be searched
      */
     protected void findWordsInTable(@NotNull XWPFDocument doc, @NotNull String word) {
-        this.word = word;
+        this.bookmark = word;
         for (XWPFTable t : doc.getTables()) {
             checkTable(t);
         }
     }
 
+    /**
+     * Checks if XWPFDocument text contains a given bookmark. Checks runs of all paragraphs if searchable text is in one or
+     * scattered in runs around it. It does not check separate paragraphs if text is scattered amongst them.
+     *
+     * @param doc  XWPFDocument
+     * @param word to be searched
+     */
     protected void findWordsInText(@NotNull XWPFDocument doc, @NotNull String word) {
-        this.word = word;
+        this.bookmark = word;
         for (XWPFParagraph p : doc.getParagraphs()) {
             if (paragraphNotNullAndHasRuns(p)) {
                 checkInParagraph(p);
@@ -65,11 +72,13 @@ public abstract class WordFinder implements OnWordFoundCallback {
             XWPFRun run = p.getRuns().get(runIndex);
             if (isRunNotNullAndNotEmpty(run)) {
                 String text = run.getText(DEFAULT_POS);
-                //System.out.println(runIndex + " " + text);  Uncomment for printing the runs
-                if (text.contains(word)) {
+                //System.out.println(runIndex + " " + text);  //Uncomment for printing the runs
+                if (text.contains(bookmark)) {
                     onWordFoundInRun(run);
                     lastUsedRun = runIndex;
-                } else if (isWordInPreviousCurrentNextRuns(runs, lastUsedRun, runIndex)) {
+                } else if (nextRunHasText(runs, runIndex)
+                        && !nextRunsText(runs, runIndex).contains(bookmark)
+                        && isWordInPreviousCurrentNextRuns(runs, lastUsedRun, runIndex)) {
                     onWordFoundInPreviousCurrentNextRun(runs, runIndex);
                 }
             }
@@ -80,8 +89,7 @@ public abstract class WordFinder implements OnWordFoundCallback {
         return isNotFirstRun(runIndex)
                 && previousRunHasText(runs, runIndex)
                 && previousRunWasNotUsed(lastUsedRun, runIndex)
-                && nextRunHasText(runs, runIndex)
-                && lastThisNextRunText(runs, runIndex).contains(word);
+                && lastThisNextRunText(runs, runIndex).contains(bookmark);
     }
 
     private boolean previousRunWasNotUsed(int lastUsedRun, int runIndex) {

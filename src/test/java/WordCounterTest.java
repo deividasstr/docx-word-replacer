@@ -20,7 +20,6 @@ public class WordCounterTest {
     public final static String TEST_DOC_TEST_CASE_TABLE_3 = "test_case_table_3";
 
     public final static String TEST_DOC_TEST_CASE = "test_case";
-    public final static String TEST_DOC_TEST_CASE_WORD = "word";
     public final static String TEST_DOC_TEST_CASE_RANDOM_WORD = "Uga-chaga";
 
     public final static String TEST_DOC_TEST_CASE_SAME_VALS_IN_SAME_RUN = "same_run_vals";
@@ -60,14 +59,16 @@ public class WordCounterTest {
         assertEquals(0, wordCounter.countWordsInText(doc, TEST_DOC_TEST_CASE_RANDOM_WORD));
     }
 
-    // Edge case, not required yet
+    // Vals are replaced, but counter does not count multiple substrings in a string
     /*@Test
     public void wordCountInFile_shouldFind2ValsInSameRun() throws Exception {
-        assertEquals(2, wordCounter.findWordsInDocx(doc, TEST_DOC_TEST_CASE_SAME_VALS_IN_SAME_RUN));
+        assertEquals(2, wordCounter.countWordsInText(doc, TEST_DOC_TEST_CASE_SAME_VALS_IN_SAME_RUN));
     }*/
 
     @Test
     public void wordCountInFile_shouldFind2ValsInSameParaDiffRuns() throws Exception {
         assertEquals(2, wordCounter.countWordsInText(doc, TEST_DOC_TEST_CASE_SAME_VALS_IN_ONE_PARA));
     }
+
+
 }

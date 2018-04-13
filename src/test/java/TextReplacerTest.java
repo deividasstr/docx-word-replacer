@@ -83,10 +83,14 @@ public class TextReplacerTest {
         assertEquals(0, wordCounter.countWordsInTable(document, REPLACED_WORD_2));
     }
 
-    // Edge case, not required yet
+    // Vals are replaced, but counter does not count multiple substrings in a string
     /*@Test
     public void wordCountInFile_shouldFind2ValsInSameRun() throws Exception {
-        assertEquals(2, wordCounter.findWordsInDocx(doc, TEST_DOC_TEST_CASE_SAME_VALS_IN_SAME_RUN));
+        replacer.replaceInText(document, WordCounterTest.TEST_DOC_TEST_CASE_SAME_VALS_IN_SAME_RUN, REPLACED_WORD);
+        replacer.replaceInTable(document, WordCounterTest.TEST_DOC_TEST_CASE_SAME_VALS_IN_SAME_RUN, REPLACED_WORD);
+
+        assertEquals(2, wordCounter.countWordsInText(document, REPLACED_WORD));
+        assertEquals(2, wordCounter.countWordsInTable(document, REPLACED_WORD));
     }*/
 
     @Test

@@ -1,3 +1,5 @@
+import org.apache.commons.codec.binary.StringUtils;
+import org.apache.poi.util.StringUtil;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import utils.WordFinder;
@@ -30,24 +32,28 @@ import java.util.List;
 
     @Override
     public void onWordFoundInPreviousCurrentNextRun(List<XWPFRun> runs, int currentRun) {
-        replaceNotFullBookmarkInRun(runs.get(currentRun - 1));
-        deleteTextFromRun(runs.get(currentRun));
-        cleanRunTextStart(runs.get(currentRun + 1));
+        replaceWordInPreviousCurrentNextRuns(runs, currentRun);
     }
 
-    private void deleteTextFromRun(XWPFRun run) {
+     private void replaceWordInPreviousCurrentNextRuns(List<XWPFRun> runs, int currentRun) {
+         replaceNotFullBookmarkInRun(runs.get(currentRun - 1));
+         deleteTextFromRun(runs.get(currentRun));
+         cleanRunTextStart(runs.get(currentRun + 1));
+     }
+
+     private void deleteTextFromRun(XWPFRun run) {
         run.setText("", DEFAULT_TEXT_POS);
     }
 
     private void replaceWordInRun(XWPFRun run) {
-        String replacedText = run.getText(DEFAULT_TEXT_POS).replace(bookmark, replacement);
+        String replacedText = run.getText(DEFAULT_TEXT_POS).replaceAll(bookmark, replacement);
         run.setText(replacedText, DEFAULT_TEXT_POS);
     }
 
     private void replaceNotFullBookmarkInRun(XWPFRun run) {
         String text = run.getText(DEFAULT_TEXT_POS);
         String remainingBookmark = getRemainingBookmarkStart(text, bookmark);
-        text = text.replace(remainingBookmark, replacement);
+        text = text.replaceAll(remainingBookmark, replacement);
         run.setText(text, DEFAULT_TEXT_POS);
     }
 
