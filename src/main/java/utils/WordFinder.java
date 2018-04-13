@@ -26,7 +26,7 @@ public abstract class WordFinder implements OnWordFoundCallback {
         }
     }
 
-    public void findWordsInText(@NotNull XWPFDocument doc, @NotNull String word) {
+    protected void findWordsInText(@NotNull XWPFDocument doc, @NotNull String word) {
         this.word = word;
         for (XWPFParagraph p : doc.getParagraphs()) {
             if (paragraphNotNullAndHasRuns(p)) {
@@ -67,15 +67,15 @@ public abstract class WordFinder implements OnWordFoundCallback {
                 String text = run.getText(DEFAULT_POS);
                 //System.out.println(runIndex + " " + text);
                 if (text.contains(word)) {
-                    onWordFoundInRun();
+                    onWordFoundInRun(run);
                     lastUsedRun = runIndex;
                 } else if (isNotFirstRun(runIndex)
                         && previousRunHasText(runs, runIndex)
                         && previousRunWasNotUsed(lastUsedRun, runIndex)) {
                     if (lastAndCurrentRunsText(runs, runIndex, text).contains(word)) {
-                        onWordFoundInPreviousAndCurrentRun();
+                        onWordFoundInPreviousAndCurrentRun(runs, runIndex);
                     } else if (nextRunHasText(runs, runIndex) && lastThisNextRunText(runs, runIndex).contains(word)) {
-                        onWordFoundInPreviousCurrentNextRun();
+                        onWordFoundInPreviousCurrentNextRun(runs, runIndex);
                     }
                 }
             }

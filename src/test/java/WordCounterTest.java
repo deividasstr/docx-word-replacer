@@ -1,6 +1,7 @@
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import utils.WordCounter;
 
@@ -28,11 +29,11 @@ public class WordCounterTest {
     private final static String TEST_DOC_TEST_CASE_SAME_VALS_IN_SAME_RUN = "same_run_vals";
     private final static String TEST_DOC_TEST_CASE_SAME_VALS_IN_ONE_PARA = "same_vals_one_para";
 
-    private XWPFDocument doc;
-    private WordCounter wordCounter;
+    private static XWPFDocument doc;
+    private static WordCounter wordCounter;
 
-    @Before
-    public void setup() throws Exception{
+    @BeforeClass
+    public static void setup() throws Exception{
         InputStream inputStream = new FileInputStream(new File("./src/test/resources/docxfile.docx"));
         doc = new XWPFDocument(inputStream);
         wordCounter = new WordCounter();

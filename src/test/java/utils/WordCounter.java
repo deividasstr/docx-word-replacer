@@ -1,23 +1,26 @@
 package utils;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+
+import java.util.List;
 
 public class WordCounter extends WordFinder {
 
     private int foundWords;
 
     @Override
-    public void onWordFoundInRun() {
+    public void onWordFoundInRun(XWPFRun run) {
         foundWords++;
     }
 
     @Override
-    public void onWordFoundInPreviousAndCurrentRun() {
+    public void onWordFoundInPreviousAndCurrentRun(List<XWPFRun> runs, int currentRun) {
         foundWords++;
     }
 
     @Override
-    public void onWordFoundInPreviousCurrentNextRun() {
+    public void onWordFoundInPreviousCurrentNextRun(List<XWPFRun> runs, int currentRun) {
         foundWords++;
     }
 
