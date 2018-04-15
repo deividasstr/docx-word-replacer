@@ -20,7 +20,7 @@ Add it in your root build.gradle at the end of repositories:
 Step 2. Add the dependency
 
 	dependencies {
-	        implementation 'com.github.deividasstr:docx-word-replacer:0.1'
+	        implementation 'com.github.deividasstr:docx-word-replacer:0.2'
 	}
 
 Maven 
@@ -38,7 +38,7 @@ Step 2. Add the dependency
 	<dependency>
 	    <groupId>com.github.deividasstr</groupId>
 	    <artifactId>docx-word-replacer</artifactId>
-	    <version>0.1</version>
+	    <version>0.2</version>
 	</dependency>
 
 
