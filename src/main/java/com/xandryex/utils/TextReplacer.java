@@ -1,12 +1,11 @@
-import org.apache.commons.codec.binary.StringUtils;
-import org.apache.poi.util.StringUtil;
+package com.xandryex.utils;
+
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import utils.WordFinder;
 
 import java.util.List;
 
- class TextReplacer extends WordFinder {
+public class TextReplacer extends WordFinder {
 
     private static int DEFAULT_TEXT_POS = 0;
 
@@ -35,13 +34,13 @@ import java.util.List;
         replaceWordInPreviousCurrentNextRuns(runs, currentRun);
     }
 
-     private void replaceWordInPreviousCurrentNextRuns(List<XWPFRun> runs, int currentRun) {
-         replaceNotFullBookmarkInRun(runs.get(currentRun - 1));
-         deleteTextFromRun(runs.get(currentRun));
-         cleanRunTextStart(runs.get(currentRun + 1));
-     }
+    private void replaceWordInPreviousCurrentNextRuns(List<XWPFRun> runs, int currentRun) {
+        replaceNotFullBookmarkInRun(runs.get(currentRun - 1));
+        deleteTextFromRun(runs.get(currentRun));
+        cleanRunTextStart(runs.get(currentRun + 1));
+    }
 
-     private void deleteTextFromRun(XWPFRun run) {
+    private void deleteTextFromRun(XWPFRun run) {
         run.setText("", DEFAULT_TEXT_POS);
     }
 

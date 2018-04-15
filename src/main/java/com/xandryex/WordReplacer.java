@@ -1,5 +1,7 @@
-import com.sun.istack.internal.NotNull;
+package com.xandryex;
+
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import com.xandryex.utils.TextReplacer;
 
 import java.io.*;
 
@@ -14,7 +16,7 @@ public class WordReplacer {
      * @param docxFile file of type docx.
      * @throws IOException thrown if file is not found or is not required type.
      */
-    public WordReplacer(@NotNull File docxFile) throws IOException {
+    public WordReplacer(File docxFile) throws IOException {
         InputStream inputStream = new FileInputStream(docxFile);
         init(new XWPFDocument(inputStream));
     }
@@ -23,7 +25,7 @@ public class WordReplacer {
      * Creates WordReplacer with XWPFDocument to modify.
      * @param xwpfDoc to modify.
      */
-    public WordReplacer(@NotNull XWPFDocument xwpfDoc) {
+    public WordReplacer(XWPFDocument xwpfDoc) {
         init(xwpfDoc);
     }
 
@@ -72,10 +74,6 @@ public class WordReplacer {
         return saveToFile(file);
     }
 
-    /**
-     * Returns modified XWPFDocument file.
-     * @return modified XWPFDocument file.
-     */
     public XWPFDocument getModdedXWPFDoc() {
         return document;
     }
@@ -88,7 +86,6 @@ public class WordReplacer {
             document.close();
             return file;
         } catch (Exception e) {
-            e.printStackTrace();
             throw e;
         } finally {
             if (out != null) {

@@ -3,7 +3,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
-import utils.WordCounter;
+import com.xandryex.utils.TextReplacer;
+import com.xandryex.utils.WordCounter;
 
 import java.io.*;
 

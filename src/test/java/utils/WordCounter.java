@@ -1,4 +1,4 @@
-package utils;
+package com.xandryex.utils;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;

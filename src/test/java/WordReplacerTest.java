@@ -1,9 +1,10 @@
+import com.xandryex.WordReplacer;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import utils.WordCounter;
+import com.xandryex.utils.WordCounter;
 
 import java.io.*;
 

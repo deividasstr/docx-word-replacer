@@ -1,11 +1,10 @@
-package utils;
+package com.xandryex.utils;
 
-import com.sun.istack.internal.NotNull;
 import org.apache.poi.xwpf.usermodel.*;
 
 import java.util.*;
 
-public abstract class WordFinder implements OnWordFoundCallback {
+abstract class WordFinder implements OnWordFoundCallback {
 
     private static int DEFAULT_POS = 0;
     private static int DEFAULT_LAST_USED_RUN = -1;
@@ -19,7 +18,7 @@ public abstract class WordFinder implements OnWordFoundCallback {
      * @param doc  XWPFDocument
      * @param word to be searched
      */
-    protected void findWordsInTable(@NotNull XWPFDocument doc, @NotNull String word) {
+    void findWordsInTable(XWPFDocument doc, String word) {
         this.bookmark = word;
         for (XWPFTable t : doc.getTables()) {
             checkTable(t);
@@ -33,7 +32,7 @@ public abstract class WordFinder implements OnWordFoundCallback {
      * @param doc  XWPFDocument
      * @param word to be searched
      */
-    protected void findWordsInText(@NotNull XWPFDocument doc, @NotNull String word) {
+    void findWordsInText(XWPFDocument doc, String word) {
         this.bookmark = word;
         for (XWPFParagraph p : doc.getParagraphs()) {
             if (paragraphNotNullAndHasRuns(p)) {

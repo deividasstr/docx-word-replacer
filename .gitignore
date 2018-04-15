@@ -1,4 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
-*.jar
 .gradle
 .idea/
+
+build
+out/
+/pom.xml
