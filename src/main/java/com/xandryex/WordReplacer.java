@@ -54,7 +54,7 @@ public class WordReplacer {
     }
 
     /**
-     * Creates file from path, saves the modified document to it and returns it.
+     * Most of the time we want our template files untouched. Creates file from path, saves the modified document to it and returns it.
      * @param path filepath (dirs + filename).
      * @return modified file.
      * @throws Exception thrown if some issues while saving occur - mostly due to unavailable file or permissions.
@@ -65,7 +65,7 @@ public class WordReplacer {
     }
 
     /**
-     * Saves the modified document to the given file and returns it.
+     * Most of the time we want our template files untouched. Saves the modified document to the given file and returns it.
      * @param file to save to.
      * @return modified file.
      * @throws Exception thrown if some issues while saving occur - mostly due to unavailable file or permissions.
