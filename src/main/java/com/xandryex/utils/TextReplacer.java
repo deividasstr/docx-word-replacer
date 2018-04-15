@@ -4,6 +4,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class TextReplacer extends WordFinder {
 
@@ -44,15 +45,17 @@ public class TextReplacer extends WordFinder {
         run.setText("", DEFAULT_TEXT_POS);
     }
 
+    //replaceAll() first parameter is used as regex pattern so normally special chars have to be escaped.
+    //Pattern.quote() transforms given string into literal where special chars are ignored, thus can be used without escaping
     private void replaceWordInRun(XWPFRun run) {
-        String replacedText = run.getText(DEFAULT_TEXT_POS).replaceAll(bookmark, replacement);
+        String replacedText = run.getText(DEFAULT_TEXT_POS).replaceAll(Pattern.quote(bookmark), replacement);
         run.setText(replacedText, DEFAULT_TEXT_POS);
     }
 
     private void replaceNotFullBookmarkInRun(XWPFRun run) {
         String text = run.getText(DEFAULT_TEXT_POS);
         String remainingBookmark = getRemainingBookmarkStart(text, bookmark);
-        text = text.replaceAll(remainingBookmark, replacement);
+        text = text.replace(remainingBookmark, replacement);
         run.setText(text, DEFAULT_TEXT_POS);
     }
 
