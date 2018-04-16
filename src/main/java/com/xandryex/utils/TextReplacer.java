@@ -36,8 +36,12 @@ public class TextReplacer extends WordFinder {
     }
 
     private void replaceWordInPreviousCurrentNextRuns(List<XWPFRun> runs, int currentRun) {
-        replaceNotFullBookmarkInRun(runs.get(currentRun - 1));
-        deleteTextFromRun(runs.get(currentRun));
+        boolean replacedInPreviousRun = replaceRunTextStart(runs.get(currentRun - 1));
+        if (replacedInPreviousRun) {
+            deleteTextFromRun(runs.get(currentRun));
+        } else {
+            replaceRunTextStart(runs.get(currentRun));
+        }
         cleanRunTextStart(runs.get(currentRun + 1));
     }
 
@@ -52,11 +56,15 @@ public class TextReplacer extends WordFinder {
         run.setText(replacedText, DEFAULT_TEXT_POS);
     }
 
-    private void replaceNotFullBookmarkInRun(XWPFRun run) {
+    private boolean replaceRunTextStart(XWPFRun run) {
         String text = run.getText(DEFAULT_TEXT_POS);
         String remainingBookmark = getRemainingBookmarkStart(text, bookmark);
-        text = text.replace(remainingBookmark, replacement);
-        run.setText(text, DEFAULT_TEXT_POS);
+        if (!remainingBookmark.isEmpty()) {
+            text = text.replace(remainingBookmark, replacement);
+            run.setText(text, DEFAULT_TEXT_POS);
+            return true;
+        }
+        return false;
     }
 
     private void cleanRunTextStart(XWPFRun run) {
